@@ -12,10 +12,10 @@
           <!-- <router-link to="/vue2">  Vue2</router-link> -->
           <span>vue2</span>
         </a-menu-item>
-        <a-menu-item key="/vue3" @click="goLocation('/vue3')">
+        <a-menu-item key="/react16" @click="goLocation('/react16')">
           <upload-outlined />
-          <!-- <router-link to="/vue3">  Vue3</router-link> -->
-          <span>vue3</span>
+          <!-- <router-link to="/react">  Vue3</router-link> -->
+          <span>react16</span>
         </a-menu-item>
       </a-menu>
     </a-layout-sider>
