@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      class DiffSandbox {
+        constructor(name) {
+          this.name = name;
+          this.modifyMap = {};
+          this.windowSnapshot = {};
+        }
+        active() {
+          // Cache active state of the sandbox
+          this.windowSnapshot = {};
+          for (const item in window) {
+            this.windowSnapshot[item] = window[item];
+          }
+
+          // Object.keys(this.modifyMap).forEach(p=>{
+          //   window[p] = this.modifyMap[p]
+          // })
+          for (let key in this.modifyMap) {
+            window[key] = this.modifyMap[key];
+          }
+        }
+        inactive() {
+          for (const item in window) {
+            if (this.windowSnapshot[item] !== window[item]) {
+              // Record changes
+              this.modifyMap[item] = window[item];
+              // restore window
+              window[item] = this.windowSnapshot[item];
+            }
+          }
+        }
+      }
+      window.b = 100;
+      const diffSandbox = new DiffSandbox("diff1");
+      diffSandbox.active();
+      window.a = 1;
+      console.log("Turn on the sandbox:", window.a, window.b);
+      diffSandbox.inactive();
+      console.log("Deactivate sandbox:", window.a, window.b);
+
+      window.c = 99;
+
+      diffSandbox.active();
+      console.log("Activate the sandbox:", window.a, window.b, window.c);
+
+      diffSandbox.inactive();
+      console.log("Deactivate sandbox:", window.a, window.b, window.c);
+
+      diffSandbox.active();
+      console.log("Activate the sandbox:", window.a, window.b, window.c);
+    </script>
+  </body>
+</html>
