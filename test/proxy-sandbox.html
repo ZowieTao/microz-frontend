@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      class ProxySandbox {
+        active() {
+          console.log(this.name + " active");
+          this.sandboxRunning = true;
+        }
+        inactive() {
+          console.log(this.name + " inactive");
+          this.sandboxRunning = false;
+        }
+        constructor(name) {
+          this.name = name;
+          const rawWindow = window;
+          const fakeWindow = {};
+          const proxy = new Proxy(fakeWindow, {
+            set: (target, prop, value) => {
+              if (this.sandboxRunning) {
+                target[prop] = value;
+                return true;
+              }
+            },
+            get: (target, prop) => {
+              // If there is one in fakeWindow, it will be taken from fakeWindow. Otherwise, it will be taken from the outside window.
+              let value = prop in target ? target[prop] : rawWindow[prop];
+              return value;
+            },
+          });
+          this.proxy = proxy;
+        }
+      }
+
+      const proxy1 = new ProxySandbox("proxy1");
+      ((window) => {
+        proxy1.active();
+        console.log("Modify the sex of proxy1 before modifying", window.sex);
+        window.sex = "female";
+        console.log("Sex of proxy1 after modification", window.sex);
+      })(proxy1.proxy);
+
+      console.log(window.sex);
+    </script>
+  </body>
+</html>
