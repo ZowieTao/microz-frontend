@@ -41,10 +41,16 @@ export const handleRouter = async () => {
   // });
   // container.innerHTML = html;
 
-  const { template, getExternalScripts, execScripts } = await importHTML(
-    app.entry
-  );
-  container.appendChild(template);
+  const { template, execScripts } = await importHTML(app.entry);
+  const container = document.querySelector(app.container);
+  const subWrap = document.createElement("div");
+  subWrap.id = "__inner_sub_wap__";
+  const shadowDom = subWrap.attachShadow({ mode: "open" });
+  shadowDom.innerHTML = template.innerHTML;
+
+  container.innerHTML = "";
+  container.appendChild(subWrap);
+
 
   getExternalScripts().then((scripts) => {
     console.log(scripts);

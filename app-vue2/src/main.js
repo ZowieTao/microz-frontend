@@ -9,16 +9,16 @@ let instance = null;
 function render(props = {}) {
   const { container } = props;
 
-  instance = new Vue({
-    render: (h) => {
-      return h(App);
-    },
-  }).$mount(container ? container.querySelector("#app") : "#app");
-
-  // const shadowApp = container?.firstChild.shadowRoot.querySelector("#app");
   // instance = new Vue({
-  //   render: (h) => h(App),
-  // }).$mount(shadowApp ? shadowApp : "#app");
+  //   render: (h) => {
+  //     return h(App);
+  //   },
+  // }).$mount(container ? container.querySelector("#app") : "#app");
+
+  const shadowApp = container?.firstChild.shadowRoot.querySelector("#app");
+  instance = new Vue({
+    render: (h) => h(App),
+  }).$mount(shadowApp ? shadowApp : "#app");
 }
 
 // running not in main app
