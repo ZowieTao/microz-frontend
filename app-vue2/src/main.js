@@ -9,21 +9,27 @@ let instance = null;
 function render(props = {}) {
   const { container } = props;
 
-  const shadowApp = container?.firstChild.shadowRoot.querySelector("#app");
-
   instance = new Vue({
-    render: (h) => h(App),
-  }).$mount(shadowApp ? shadowApp : "#app");
+    render: (h) => {
+      return h(App);
+    },
+  }).$mount(container ? container.querySelector("#app") : "#app");
+
+  // const shadowApp = container?.firstChild.shadowRoot.querySelector("#app");
+  // instance = new Vue({
+  //   render: (h) => h(App),
+  // }).$mount(shadowApp ? shadowApp : "#app");
 }
 
 // running not in main app
-if (!window.__POWERED_BY_QIANKUN__) {
+if (!window?.__POWERED_BY_QIANKUN__) {
   render();
 }
 
 export async function bootstrap() {
   console.log("[vue] vue app bootstraped");
 }
+
 export async function mount(props) {
   console.log("[vue] props from main framework", props);
   render(props);
