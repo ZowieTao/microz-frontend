@@ -21,6 +21,5 @@ export const start = () => {
   // 1. watching router change
   rewriterRouter();
   // cover refresh initial case
-  console.log('init handle')
   handleRouter();
 };
