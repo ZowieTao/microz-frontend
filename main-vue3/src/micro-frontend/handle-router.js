@@ -1,6 +1,7 @@
 import { getApps } from ".";
 import { importHTML } from "./import-html";
 import { getNextRoute, getPrevRoute } from "./rewrite-router";
+import { bootstrap, mount, unmount } from "./life-cycle";
 
 export const handleRouter = async () => {
   console.log("handleRouter", window.location.pathname);
@@ -59,22 +60,6 @@ export const handleRouter = async () => {
 
   await bootstrap(app);
   await mount(app);
-  await unmount(app);
 
   // 4. render
 };
-
-async function bootstrap(app) {
-  app.bootstrap && (await app.bootstrap());
-}
-
-async function mount(app) {
-  app.mount &&
-    (await app.mount({
-      container: document.querySelector(app.container),
-    }));
-}
-
-async function unmount(app) {
-  app.unmount && (await app.unmount());
-}
