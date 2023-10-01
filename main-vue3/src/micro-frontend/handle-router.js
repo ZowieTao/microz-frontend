@@ -2,6 +2,7 @@ import { getApps } from ".";
 import { importHTML } from "./import-html";
 import { getNextRoute, getPrevRoute } from "./rewrite-router";
 import { bootstrap, mount, unmount } from "./life-cycle";
+import { ProxySandbox } from "./proxy-sandbox";
 
 export const handleRouter = async () => {
   console.log("handleRouter", window.location.pathname);
@@ -24,13 +25,8 @@ export const handleRouter = async () => {
     return;
   }
 
-  // config env for sub app, effect resource load url
-  window.__POWERED_BY_QIANKUN__ = true;
-  window.__INJECTED_PUBLIC_PATH_BY_QIANKUN__ = app.entry;
-
   // 3. load sub app
   // html css js
-  const container = document.querySelector(app.container);
 
   // /**
   //  * browser security do not execute script in innerHTML
@@ -51,21 +47,25 @@ export const handleRouter = async () => {
   container.innerHTML = "";
   container.appendChild(subWrap);
 
+  if (app.proxy) {
+    app.proxy.active();
+  } else {
+    app.proxy = new ProxySandbox(app.name);
+    app.proxy.active();
+  }
 
-  getExternalScripts().then((scripts) => {
-    console.log(scripts);
-  });
+  // config env for sub app, effect resource load url
+  window.__POWERED_BY_QIANKUN__ = true;
+  window.__INJECTED_PUBLIC_PATH_BY_QIANKUN__ = app.entry;
 
-  const appExports = await execScripts();
-
-  console.log(appExports);
+  await execScripts(app.proxy.proxy);
+  const appExports = window[app.name];
 
   app.bootstrap = appExports.bootstrap;
   app.mount = appExports.mount;
   app.unmount = appExports.unmount;
 
   await bootstrap(app);
-  await mount(app);
-
   // 4. render
+  await mount(app);
 };

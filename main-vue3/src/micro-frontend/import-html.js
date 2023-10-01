@@ -51,26 +51,25 @@ export const importHTML = async (url) => {
     global;
     const scripts = await getExternalScripts();
 
-    // make commonJS env manually
-    const module = { exports: {} };
-    const exports = module.exports;
-    console.log(exports);
-
-    scripts.forEach((code) => {
-      eval(code);
-    });
+    // // make commonJS env manually
+    // const module = { exports: {} };
+    // const exports = module.exports;
+    // console.log(exports);
 
     // scripts.forEach((code) => {
-    //   window.proxy = global;
-    //   const scriptText = `
-    //     ((window) => {
-    //       ${code}
-    //     })(window.proxy)
-    //   `;
-    //   new Function(scriptText)();
+    //   eval(code);
     // });
+    // return module.exports;
 
-    return module.exports;
+    scripts.forEach((code) => {
+      window.proxy = global;
+      const scriptText = `
+        ((window) => {
+          ${code}
+        })(window.proxy)
+      `;
+      new Function(scriptText)();
+    });
   }
   return {
     template,
