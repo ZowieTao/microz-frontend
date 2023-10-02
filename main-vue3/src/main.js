@@ -15,7 +15,15 @@ const apps = [
     activeRule: "/vue2", // which router will active this sub app
     // appInfo,
   },
+  {
+    name: "app-react16-app",
+    entry: "http://localhost:7100/", // sub app host domain
+    container: "#sub-container", // mount node selector in main app
+    activeRule: "/react16", // which router will active this sub app
+    // appInfo,
+  },
 ];
+
 registerMicroApps(apps); // Register App
 start(); // Start App
 
