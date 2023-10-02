@@ -1,4 +1,5 @@
 const packageName = require("./package.json").name;
+
 module.exports = {
   publicPath: "/",
   configureWebpack: {
